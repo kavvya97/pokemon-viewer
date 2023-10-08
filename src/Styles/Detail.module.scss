@@ -1,0 +1,77 @@
+.pokemonCard {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease-in-out; 
+    transition: 0.5s;
+    img {
+        width: 300px;
+        height: 300px;
+    }
+}
+.nodataToDisplay {
+    padding: 100px !important;
+}
+.fire {
+background-color: rgba(233, 27, 27, 0.542); /* Light red for 'fire' type */
+}
+
+.poison {
+background-color: rgba(128, 0, 128, 0.578); /* Violet for 'poison' type */
+}
+
+.grass {
+background-color: rgba(81, 185, 81, 0.629); /* Light green for 'grass' type */
+}
+    
+.water {
+    background-color: rgba(211, 239, 253);
+}
+
+.bug {
+    background-color: rgba(197, 191, 62, 0.544);
+}
+
+.ground, .rock {
+    background-color: rgba(110, 23, 23, 0.58);
+}
+.dark, .ghost {
+    background-color: rgba(107, 70, 142, 0.632);
+}
+
+.normal { 
+    background-color: wheat;
+}
+
+.prevButton, .nextButton {
+    position: absolute;
+    background: none;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.prevButton {
+    top: 50%;
+    right: 60%;
+    box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transform: translateX(-100%);
+    transition: 0.5s;
+}
+.nextButton {
+    top: 50%;
+    border: 1px springgreen;
+    right: 38%;
+    box-shadow: 5px 2px 4px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: 0.5s;
+}
+
+
+
+

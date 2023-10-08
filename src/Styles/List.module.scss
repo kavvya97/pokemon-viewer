@@ -1,0 +1,103 @@
+.listViewContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .cardContent {
+    display: flex; 
+    align-items: center; 
+  }
+  .cardInfo {
+    padding-left:20px;
+    p {
+      margin: 0;
+    }
+  }
+  .cardDetails {
+    padding: 20px;
+  }
+  .nodataToDisplay {
+    padding: 100px !important;
+  }
+  .cardImage {
+    margin-right: 16px; 
+    img {
+        width: 200px;
+        height: 200px;
+    }
+  }
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%; 
+    list-style: none;
+}
+
+.lisItemWrapper {
+// width: calc(50% - 10px);
+width: 100%;
+margin-bottom: 20px; 
+}
+.pokemonCard {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    transition: box-shadow 0.3s ease-in-out; 
+    transition: 0.5s;
+}
+  
+.pokemonCard:hover {
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); 
+    transform: translate3D(0,-1px,0) scale(1.05);
+}
+.fire {
+background-color: rgba(233, 27, 27, 0.542); /* Light red for 'fire' type */
+}
+
+.poison {
+background-color: rgba(128, 0, 128, 0.578); /* Violet for 'poison' type */
+}
+
+.grass {
+background-color: rgba(81, 185, 81, 0.629); /* Light green for 'grass' type */
+}
+  
+.water {
+    background-color: rgba(211, 239, 253);
+}
+
+.bug {
+    background-color: rgba(197, 191, 62, 0.544);
+}
+
+.ground, .rock {
+    background-color: rgba(110, 23, 23, 0.58);
+}
+.dark, .ghost {
+    background-color: rgba(107, 70, 142, 0.632);
+}
+
+.normal { 
+    background-color: wheat;
+}
+
+.sortContainer {
+  display: flex;
+  justify-content: space-between; 
+  padding: 10px; 
+  background-color: #f7f7f7; 
+  margin-bottom: 10px; 
+}
+
+.sortSelect {
+  width: 48%; 
+  padding: 10px; 
+  font-size: 1rem;
+}
