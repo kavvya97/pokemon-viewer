@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 const PokemonList = () => {
   const searchTerm = React.useContext(SearchContext);
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
-  const [limit, setLimit] = useState<number>(50);
   const [offset, setOffset] = useState<number>(0);
   const [sortOrder, setSortOrder] = useState<string>('asc');
   const [sortProperty, setSortProperty] = useState<string>('name');
@@ -53,7 +52,7 @@ const PokemonList = () => {
   const fetchPokemon = async () => {
     try {
       const response = await axios.get<{ results: Pokemon[] }>(
-        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
+        `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`
       );
       setPokemonData((prevData) => {
         let pokeList = [...prevData, ...shuffleArray(response.data.results)];
@@ -64,8 +63,9 @@ const PokemonList = () => {
         );
         if (!sortedAndFilteredData.length) {
           setNoDataToDisplay(true);
-        }
-        setNoDataToDisplay(false);
+        } else {
+          setNoDataToDisplay(false);
+        } 
         return sortedAndFilteredData;
       });
     } catch (error) {
@@ -84,7 +84,7 @@ const PokemonList = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [limit, offset, searchTerm, sortProperty, sortOrder]);
+  }, [offset, searchTerm, sortProperty, sortOrder]);
 
   return (
     <div>
@@ -108,7 +108,6 @@ const PokemonList = () => {
         </select>
       </div>
       <ul className={styles.list}>
-
         {!noDataToDisplay ? (
           sortPokemonData(pokemonData).map((pokemon, index) => (
           <div key={index} className={styles.listItemWrapper}>

@@ -35,7 +35,7 @@ export type PokemonDetails = {
     forms: [],
     height: number,
     types: PokemonType[],
-    name: String,
+    name: string,
     sprites: {
         other: {
             dream_world: {
@@ -48,5 +48,6 @@ export type PokemonDetails = {
             }
         }
     },
-    weight: number
+    weight: number,
+    url: string
 }

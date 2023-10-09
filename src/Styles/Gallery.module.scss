@@ -94,3 +94,25 @@ background-color: rgba(81, 185, 81, 0.629); /* Light green for 'grass' type */
 .normal { 
     background-color: wheat;
 }
+
+.cave {
+    background-image: url('../../public/cave.jpeg');
+}
+.grassland {
+    background-image: url('../../public/grassland.jpg');
+}
+.forest {
+    background-image: url('../../public/forest.jpeg');
+}
+.mountain {
+    background-image: url('../../public/mountain.png');
+}
+.rare {
+    background-image: url('../../public/rare.jpeg');
+}
+.sea {
+    background-image: url('../../public/sea.jpeg');
+}
+.urban {
+    background-image: url('../../public/urban.webp');
+}

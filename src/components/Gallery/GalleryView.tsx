@@ -3,17 +3,12 @@ import styles from '../../Styles/Gallery.module.scss';
 import axios from 'axios';
 import { Pokemon, PokemonSpecies, PokemonTypeFilter, pokeType } from '../../common/constant';
 import GalleryItem from './GalleryItem';
-import SearchContext from '../../common/searchContext';
 import { useNavigate } from 'react-router-dom';
 
 const PokemonList = () => {
-  const searchTerm = React.useContext(SearchContext);
   const navigate = useNavigate();
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
-  const [limit, setLimit] = useState<number>(50);
   const [offset, setOffset] = useState<number>(0);
-  const [selectedHabitat, setSelectedHabitat] = useState("");
-  const [selectedType, setSelectedType] = useState("");
   const [noDataToDisplay, setNoDataToDisplay] = useState<Boolean>(false);
   
   const types = ['fire', 'grass', 'water', 'poison', 'rock', 'ghost'];
@@ -30,18 +25,15 @@ const PokemonList = () => {
   const fetchPokemon = async () => {
     try {
       const response = await axios.get<{ results: Pokemon[] }>(
-        `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
+        `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`
       );
       setPokemonData((prevData) => {
         let pokeList = [...prevData, ...shuffleArray(response.data.results)];
-        const filteredPokemonData = searchTerm
-        ? pokeList.filter((pokemon) => pokemon.name.startsWith(searchTerm.toLowerCase()))
-        : pokeList;
         setNoDataToDisplay(false);
-        if (!filteredPokemonData.length) {
+        if (!pokeList.length) {
           setNoDataToDisplay(true);
         }
-        return filteredPokemonData;
+        return pokeList;
       });
     } catch (error) {
       console.error('Error fetching pokemon:', error);
@@ -100,10 +92,9 @@ const PokemonList = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [limit, offset, searchTerm]);
+  }, [offset]);
 
   const handleHabitatClick = (habitat: string) => {
-    setSelectedHabitat(habitat); 
     fetchPokemonByHabitat(habitat); 
   };
 
@@ -112,23 +103,50 @@ const PokemonList = () => {
   }
 
   const handlePokemonTypes = (type: string) => {
-    setSelectedType(type); 
     fetchPokemonByType(type); 
+  }
+
+  const typeStyles = {
+    fire: styles.fire,
+    water: styles.water,
+    poison: styles.poison,
+    grass: styles.grass,
+    bug: styles.bug,
+    ghost: styles.ghost,
+    rock: styles.rock,
+  };
+
+  const habitatStyles = {
+    cave: styles.cave,
+    forest: styles.forest,
+    grassland: styles.grassland,
+    mountain: styles.mountain,
+    rare: styles.rare,
+    urban: styles.urban,
+    sea: styles.sea,
   }
 
   return (
     <div>
       <div className={styles.galleryViewContainer}>
         <ul className={styles.filter}>
-          {types.map((type, index) => (
+        {types.map((type, index) => (
             <div key={index} className={styles.filterGallery}>
-              <li className={styles.filterCard} key={`pokemom-${index}`} onClick={() => handlePokemonTypes(type)}>{type}</li>
+              <li
+                className={`${styles.filterCard} ${typeStyles[type] || styles.normal}`}
+                key={`pokemon-${index}`}
+                onClick={() => handlePokemonTypes(type)}
+              >
+                {type}
+              </li>
             </div>
-          ))
-          }
+          ))}
           {habitats.map((habitat, index) => (
             <div key={index} className={styles.filterGallery}>
-              <li className={styles.filterCard} key={`pokemom-${index}`} onClick={() => handleHabitatClick(habitat)}>{habitat}</li>
+              <li 
+              className={`${styles.filterCard} ${habitatStyles[habitat]}`} 
+              key={`pokemom-${index}`} 
+              onClick={() => handleHabitatClick(habitat)}>{habitat}</li>
             </div>
           ))
           }
