@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import styles from '../../Styles/List.module.scss';
 import axios from 'axios';
@@ -6,37 +7,29 @@ import ListItem from './ListItem';
 import SearchContext from '../../common/searchContext';
 import { pokemonDetailsCache } from './ListItem'; 
 import { useNavigate } from 'react-router-dom';
+import { shufflePokemon } from '../../common/common';
 
 const PokemonList = () => {
   const searchTerm = React.useContext(SearchContext);
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [offset, setOffset] = useState<number>(0);
-  const [sortOrder, setSortOrder] = useState<string>('asc');
-  const [sortProperty, setSortProperty] = useState<string>('name');
+  const [sortConfig, setSortConfig] = useState<{order: string, property: string}>({order: 'asc',property: 'name'});
   const [noDataToDisplay, setNoDataToDisplay] = useState<Boolean>(false);
+  const [filteredPokemon, setFilteredPokemon] = useState(pokemonData);
   const navigate = useNavigate();
-
-
-  function shuffleArray(array: Pokemon[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];  // Swap elements
-    }
-    return array;
-  }
 
   const sortPokemonData = (data: Pokemon[]) => {
     if (!data || !data.length) {
-      return []
+      return [];
     } else {
       return data.sort((a, b) => {
         const aDetails = pokemonDetailsCache[a.name];
         const bDetails = pokemonDetailsCache[b.name];
         if (aDetails && bDetails) {
-          if (sortProperty === 'name') {
-            return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-          } else if (sortProperty === 'height' || sortProperty === 'weight') {
-            return sortOrder === 'asc' ? aDetails[sortProperty] - bDetails[sortProperty] : bDetails[sortProperty] - aDetails[sortProperty];
+          if (sortConfig.property === 'name') {
+            return sortConfig.order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+          } else if (sortConfig.property === 'height' || sortConfig.property === 'weight') {
+            return sortConfig.order === 'asc' ? aDetails[sortConfig.property] - bDetails[sortConfig.property] : bDetails[sortConfig.property] - aDetails[sortConfig.property];
           }
         }
         return 0;
@@ -45,9 +38,8 @@ const PokemonList = () => {
   };
 
   const handleCardClick = (name: string) => {
-    navigate(`/detail/${name}`);
+    navigate(`/mp2/detail/${name}`);
   }
-
 
   const fetchPokemon = async () => {
     try {
@@ -55,7 +47,7 @@ const PokemonList = () => {
         `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`
       );
       setPokemonData((prevData) => {
-        let pokeList = [...prevData, ...shuffleArray(response.data.results)];
+        let pokeList = [...prevData, ...shufflePokemon(response.data.results)];
         const sortedAndFilteredData = sortPokemonData(
           searchTerm
           ? pokeList.filter((pokemon) => pokemon.name.startsWith(searchTerm.toLowerCase()))
@@ -84,15 +76,42 @@ const PokemonList = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [offset, searchTerm, sortProperty, sortOrder]);
+  }, [offset]);
+
+  useEffect(() => {
+    if (searchTerm) {
+      const pokeList = pokemonData.filter((pokemon) => pokemon.name.startsWith(searchTerm.toLowerCase()))
+      if (!pokeList.length) {
+        setNoDataToDisplay(true)
+      } else {
+        setNoDataToDisplay(false)
+      }
+      setFilteredPokemon(pokeList);
+    } else {
+      setFilteredPokemon(pokemonData);
+    }
+  }, [searchTerm])
+
+  useEffect(() => {
+    let sortedData = sortPokemonData(pokemonData);
+    if (searchTerm) {
+      sortedData = sortedData.filter((pokemon) => pokemon.name.startsWith(searchTerm.toLowerCase()));
+    }
+    if (!sortedData.length) {
+      setNoDataToDisplay(true);
+    } else {
+      setNoDataToDisplay(false);
+    }
+    setPokemonData(sortedData);
+  }, [sortConfig]);
 
   return (
     <div>
       <div className={styles.sortContainer}>
         <select 
           className={styles.sortSelect}
-          value={sortProperty} 
-          onChange={(e) => setSortProperty(e.target.value)}
+          value={sortConfig.property} 
+          onChange={(e) => setSortConfig(prevConfig => ({...prevConfig, property: e.target.value}))}
         >
           <option value="name">Name</option>
           <option value="height">Height</option>
@@ -100,8 +119,8 @@ const PokemonList = () => {
         </select>
         <select 
           className={styles.sortSelect}
-          value={sortOrder} 
-          onChange={(e) => setSortOrder(e.target.value)}
+          value={sortConfig.order} 
+          onChange={(e) => setSortConfig(prevConfig => ({...prevConfig, order: e.target.value}))}
         >
           <option value="asc">Ascending</option>
           <option value="desc">Descending</option>
@@ -109,23 +128,23 @@ const PokemonList = () => {
       </div>
       <ul className={styles.list}>
         {!noDataToDisplay ? (
-          sortPokemonData(pokemonData).map((pokemon, index) => (
-          <div key={index} className={styles.listItemWrapper}>
-            <ListItem 
-              key={`pokemom-${index}`} 
-              name={pokemon.name} 
-              url={pokemon.url}
-              onClick={() => handleCardClick(pokemon.name)}
-            />
-          </div>
-        ))): (
-          <div className={`${styles.pokemonCard} ${styles.nodataToDisplay}` }>
+          sortPokemonData(searchTerm ? filteredPokemon : pokemonData).map((pokemon, index) => (
+            <div key={index} className={styles.listItemWrapper}>
+              <ListItem 
+                key={`pokemon-${index}`} 
+                name={pokemon.name} 
+                url={pokemon.url}
+                onClick={() => handleCardClick(pokemon.name)}
+              />
+            </div>
+          ))
+        ) : (
+          <div className={`${styles.pokemonCard} ${styles.noDataToDisplay}` }>
             <div>
               No Data to display
             </div>
           </div>
-        ) 
-      }
+        )}
       </ul>
     </div>
   );

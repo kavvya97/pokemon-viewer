@@ -24,7 +24,6 @@ const ListItem: React.FC<Pokemon & {onClick?: () => void}> = ({ name, url , onCl
     }, [name,url]);
 
     const pokemonType = pokemonDetails?.types[0]?.type.name;
-    const abilities = pokemonDetails?.abilities;
     let cardClassName;
     switch (pokemonType) {
       case 'fire':
@@ -46,14 +45,14 @@ const ListItem: React.FC<Pokemon & {onClick?: () => void}> = ({ name, url , onCl
     }
 
     return (
-      <li onClick={onClick}>
+      <li className={styles.pokemonlistItem} onClick={onClick}>
         <div className={`${styles.pokemonCard} ${cardClassName}`}>
           {pokemonDetails && (
             <div className={styles.cardContent}>
               <div className={styles.cardImage}>
                 <img
                   src={pokemonDetails.sprites.other['official-artwork'].front_default}
-                  alt={`Image of ${pokemonDetails.name}`}
+                  alt="pokemon"
                 />
               </div>
               <div className={styles.cardInfo}>

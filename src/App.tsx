@@ -11,36 +11,31 @@ import DetailsView from './components/Detail/DetailsView';
 import { Navigate } from 'react-router-dom';
 
 const router = createBrowserRouter([
-    {
-      path: "/",
-      element: (
-        <Search />
-      ),
-      errorElement: <ErrorPage />,
-      children: [
-        {
-          path: "/", 
-          element: <Navigate to="/list" replace /> 
-        },
-        {
-          path: "/gallery",
-          element: (
-            <GalleryView />
-          )
-        },
-        {
-          path: '/list',
-          element: (
-            <ListView />
-          )
-        },
-        {
-          path: "/detail/:name",
-          element: <DetailsView />,
-        }
-      ],
-    }
-  ]);
+  {
+    path: "/mp2",
+    element: <Search />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="/mp2/list" replace />
+      },
+      {
+        path: "gallery",
+        element: <GalleryView />
+      },
+      {
+        path: "list", 
+        element: <ListView />
+      },
+      {
+        path: "detail/:name",
+        element: <DetailsView />,
+      }
+    ],
+  }
+]);
+
 
 export default function App() {
     return (

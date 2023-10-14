@@ -41,7 +41,7 @@ const GalleryItem: React.FC<Pokemon & {onClick?: () => void}> = ({ name, url, on
     }
 
     return (
-      <li onClick={onClick}>
+      <li className={styles.pokemonGalleryItem} onClick={onClick}>
         <div className={`${styles.pokemonCard} ${cardClassName}`}>
           <h3>{name}</h3>
           {pokemonDetails && (

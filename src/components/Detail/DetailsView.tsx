@@ -40,25 +40,17 @@ const DetailView: React.FC = () => {
         }
     }, [name]);
 
-    function shuffleArray(array: Pokemon[]) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
-
     const goToNext = () => {
         if (currentIndex < pokemonNames.length - 1) {
             const nextName = pokemonNames[currentIndex + 1];
-            navigate(`/detail/${nextName}`);
+            navigate(`/mp2/detail/${nextName}`);
         }
     };
 
     const goToPrevious = () => {
         if (currentIndex > 0) {
             const previousName = pokemonNames[currentIndex - 1];
-            navigate(`/detail/${previousName}`);
+            navigate(`/mp2/detail/${previousName}`);
         }
     };
 
@@ -91,13 +83,20 @@ const DetailView: React.FC = () => {
                 
                 <div className={`${styles.pokemonCard} ${cardClassName}`}>
                     <h1>{pokemonDetails?.name}</h1>
-                    <div className="card-content">
+                    <div>
                         <img 
                             src={pokemonDetails?.sprites.other.dream_world.front_default} 
-                            alt={`Image of ${pokemonDetails?.name}`} 
+                            alt='pokemon'
                             className="card-image"
                         />
-                        <ul className="abilities-list">
+                        <p><b>Type:</b></p>
+                        <ul className={styles.abilitiesList}>
+                            {pokemonDetails?.types.map((type, index) => (
+                                <li key={index}>{type.type.name}</li>
+                            ))}
+                        </ul>
+                        <p><b>Abilities:</b></p>
+                        <ul className={styles.abilitiesList}>
                             {pokemonDetails?.abilities.map((ability, index) => (
                                 <li key={index}>{ability.ability.name}</li>
                             ))}

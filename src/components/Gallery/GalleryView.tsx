@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from 'react';
 import styles from '../../Styles/Gallery.module.scss';
 import axios from 'axios';
 import { Pokemon, PokemonSpecies, PokemonTypeFilter, pokeType } from '../../common/constant';
 import GalleryItem from './GalleryItem';
 import { useNavigate } from 'react-router-dom';
+import { habitatStyles, shufflePokemon, typeStyles } from '../../common/common';
 
 const PokemonList = () => {
   const navigate = useNavigate();
@@ -14,21 +16,13 @@ const PokemonList = () => {
   const types = ['fire', 'grass', 'water', 'poison', 'rock', 'ghost'];
   const habitats = ['cave', 'forest', 'grassland', 'mountain', 'rare','sea', 'urban'];
 
-  function shuffleArray(array: Pokemon[]) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]]; 
-    }
-    return array;
-  }
-
   const fetchPokemon = async () => {
     try {
       const response = await axios.get<{ results: Pokemon[] }>(
         `https://pokeapi.co/api/v2/pokemon?limit=50&offset=${offset}`
       );
       setPokemonData((prevData) => {
-        let pokeList = [...prevData, ...shuffleArray(response.data.results)];
+        let pokeList = [...prevData, ...shufflePokemon(response.data.results)];
         setNoDataToDisplay(false);
         if (!pokeList.length) {
           setNoDataToDisplay(true);
@@ -68,7 +62,6 @@ const PokemonList = () => {
       const response = await axios.get<PokemonTypeFilter>(
         `https://pokeapi.co/api/v2/type/${type}`
       );
-      console.log(response)
       const speciesList: Pokemon[] = response.data.pokemon.map((elem: pokeType) => {
         return {
           name: elem.pokemon.name,
@@ -99,31 +92,11 @@ const PokemonList = () => {
   };
 
   const handleGalleryCardClick = (name: string) => {
-    navigate(`/detail/${name}`);
+    navigate(`/mp2/detail/${name}`);
   }
 
   const handlePokemonTypes = (type: string) => {
     fetchPokemonByType(type); 
-  }
-
-  const typeStyles = {
-    fire: styles.fire,
-    water: styles.water,
-    poison: styles.poison,
-    grass: styles.grass,
-    bug: styles.bug,
-    ghost: styles.ghost,
-    rock: styles.rock,
-  };
-
-  const habitatStyles = {
-    cave: styles.cave,
-    forest: styles.forest,
-    grassland: styles.grassland,
-    mountain: styles.mountain,
-    rare: styles.rare,
-    urban: styles.urban,
-    sea: styles.sea,
   }
 
   return (
@@ -131,25 +104,24 @@ const PokemonList = () => {
       <div className={styles.galleryViewContainer}>
         <ul className={styles.filter}>
         {types.map((type, index) => (
-            <div key={index} className={styles.filterGallery}>
+          <div key={index} className={styles.filterGallery}>
               <li
-                className={`${styles.filterCard} ${typeStyles[type] || styles.normal}`}
-                key={`pokemon-${index}`}
-                onClick={() => handlePokemonTypes(type)}
+                  className={` ${styles.pokemonGalleryItem} ${styles.filterCard} ${typeStyles[type as keyof typeof typeStyles] || styles.normal}`}
+                  key={`pokemon-${index}`}
+                  onClick={() => handlePokemonTypes(type)}
               >
-                {type}
+                  {type}
               </li>
-            </div>
-          ))}
-          {habitats.map((habitat, index) => (
-            <div key={index} className={styles.filterGallery}>
+          </div>
+        ))}
+        {habitats.map((habitat, index) => (
+          <div key={index} className={styles.filterGallery}>
               <li 
-              className={`${styles.filterCard} ${habitatStyles[habitat]}`} 
-              key={`pokemom-${index}`} 
+              className={`${styles.pokemonGalleryItem} ${styles.filterCard} ${habitatStyles[habitat as keyof typeof habitatStyles]}`} 
+              key={`pokemon-${index}`} 
               onClick={() => handleHabitatClick(habitat)}>{habitat}</li>
-            </div>
-          ))
-          }
+          </div>
+        ))}
         </ul>
       </div>
       {!noDataToDisplay ? (

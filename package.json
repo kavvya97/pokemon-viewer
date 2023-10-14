@@ -1,5 +1,6 @@
 {
   "name": "mp2",
+  "homepage": "mp2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
